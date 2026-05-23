@@ -45,5 +45,7 @@ if st.button("🩺Predict Illness"):
 
     import matplotlib.pyplot as plt
     fig = plt.figure()
-    shap.plots.bar(shap_values, show=False)
+
+    #Use [0] to get the values for the predicted class
+    shap.plots.bar(shap_values[0], show=False)
     st.pyplot(fig)
