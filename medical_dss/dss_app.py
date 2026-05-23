@@ -44,8 +44,15 @@ if st.button("🩺Predict Illness"):
     st.subheader("Symptom contribution to prediction")
 
     import matplotlib.pyplot as plt
-    fig = plt.figure()
+    fig, ax = plt.subplots()
 
-    #Use [0] to get the values for the predicted class
-    shap.plots.bar(shap_values[0], show=False)
+    #Plot using the values array directly
+    shap.plots.bar(
+        shap.Explanation(
+            values=shap_values.values[0],
+            feature_names=input_data.columns.tolist()
+       ),
+       show=False,
+       ax=ax
+    )
     st.pyplot(fig)
