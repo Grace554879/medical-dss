@@ -1,21 +1,19 @@
-from flask import Flask, request, jsonify
+import streamlit as st
 import joblib
 import pandas as pd
 
 #Load trained model
 model = joblib.load('dss_model.pkl')
 
-#Initialize Flask app
-app = Flask(__name__)
+st.title("Medical DSS - Prediction App")
+st.write("Enter patient data to get a prediction")
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    data = request.get_json(force=True)
-    input_df = pd.DataFrame([data])
+#Example inputs - change these to match your model features
+feature1 = st.number_input("Feature 1", value=0.0)
+feature2 = st.number_input("Feature 2", value=0.0)
+#Add more inputs based on what your model needs
+
+if st.button("Predict"):
+    input_df = pd.DataFrame([[feature1, feature2]]) #match your model columns
     prediction = model.predict(input_df)[0]
-    return jsonify({'prediction': prediction})
-
-
-if __name__ == '__main__':
-        app.run(debug=True)
-    
+    st.success(f"Prediction: {prediction}")    
