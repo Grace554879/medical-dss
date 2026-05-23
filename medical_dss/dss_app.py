@@ -27,9 +27,11 @@ with col2:
 if st.button("🩺Predict Illness"):
     input_data = pd.DataFrame([[fever, cough, shortness_of_breath, chest_pain]],
                               columns=['fever', 'cough', 'shortness_of_breath', 'chest_pain'])
-    prediction = model.predict(input_data)[0]
+                              
+    #Get prediction and confidence
+    prediction = model.predict(input_data)
+    confidence = model.predict_proba(input_data).max() *100
 
-    #Nicer result display
-    st.success(f"Predicted illness: **{prediction}**") 
-    st.caption("AI-assisted suggestion. Consult a medical professional for diagnosis")  
+    st.success(f"Predicted illness: {prediction[0]}")
+    st.info(f"Confidence: {confidence:.2f}%")    
  
