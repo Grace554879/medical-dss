@@ -1,12 +1,16 @@
 import streamlit as st
 import joblib
 import pandas as pd
-
-#page config
-st.set_page_config(page_title="Medical DSS", page_icon="🏥", layout="centered")
+import shap
 
 #Load trained model
 model = joblib.load('dss_model.pkl')
+
+#Now create explainer after model exists
+explainer = shap.Explainer(model)
+
+# page config
+st.set_page_config(page_title="Medical DSS", page_icon="🏥", layout="centered")
 
 #Header 
 st.title("🏥Medical DSS - Prediction App")
@@ -27,7 +31,7 @@ with col2:
 if st.button("🩺Predict Illness"):
     input_data = pd.DataFrame([[fever, cough, shortness_of_breath, chest_pain]],
                               columns=['fever', 'cough', 'shortness_of_breath', 'chest_pain'])
-                              
+
     #Get prediction and confidence
     prediction = model.predict(input_data)
     confidence = model.predict_proba(input_data).max() *100
@@ -35,3 +39,11 @@ if st.button("🩺Predict Illness"):
     st.success(f"Predicted illness: {prediction[0]}")
     st.info(f"Confidence: {confidence:.2f}%")    
  
+    #SHAP explanation
+    shap_values = explainer(input_data)
+    st.subheader("Symptom contribution to prediction")
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure()
+    shap.plots.bar(shap_values, show=False)
+    st.pyplot(fig)
