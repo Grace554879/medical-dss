@@ -6,14 +6,16 @@ import pandas as pd
 model = joblib.load('dss_model.pkl')
 
 st.title("Medical DSS - Prediction App")
-st.write("Enter patient data to get a prediction")
+st.write("Enter patient symptoms to get a predicted illness")
 
-#Example inputs - change these to match your model features
-feature1 = st.number_input("Feature 1", value=0.0)
-feature2 = st.number_input("Feature 2", value=0.0)
-#Add more inputs based on what your model needs
+#Input fields matching your model
+fever = st.selectbox("Fever?", [0,1], format_func=lambda x: "Yes" if x == 1 else "No")
+cough = st.selectbox("cough?", [0,1], format_func=lambda x: "Yes" if x == 1 else "No")
+shortness_of_breath = st.selectbox("Shortness of breath?", [0,1], format_func=lambda x: "Yes" if x == 1 else"No")
+chest_pain = st.selectbox("Chest pain?", [0,1], format_func=lambda x: "Yes" if x == 1 else "No")
 
 if st.button("Predict"):
-    input_df = pd.DataFrame([[feature1, feature2]]) #match your model columns
-    prediction = model.predict(input_df)[0]
-    st.success(f"Prediction: {prediction}")    
+    input_data = pd.DataFrame([[fever, cough, shortness_of_breath, chest_pain]],
+                              columns=['fever', 'cough', 'shortness_of_breath', 'chest_pain'])
+    prediction = model.predict(input_data)[0]
+    st.success(f"Predicted illness: **{prediction}**")    
