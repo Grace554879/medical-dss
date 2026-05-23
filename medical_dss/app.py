@@ -17,5 +17,10 @@ chest_pain = st.selectbox("Do you have chest pain?", [0,1], format_func=lambda x
 if st.button("Predict Illness"):
     input_data = pd.DataFrame([[fever, cough, shortness_of_breath, chest_pain]],
                               columns=['fever', 'cough', 'shortness_of_breath', 'chest_pain'])
-    prediction = model.predict(input_data)[0]
-    st.success(f"Predicted illness: **{prediction}**")    
+
+    #Get prediction and confidence
+    prediction = model.predict(input_data)
+    confidence = model.predict_proba(input_data).max() *100
+
+    st.success(f"Predicted illness: {prediction[0]}")
+    st.info(f"Confidence: {confidence:.2f}%")    
